@@ -1,8 +1,6 @@
 const userModel = require("../models/users");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
-let JWTSECRETKEY = "TECHNOELEVATEDEVELOPMENTTEAM";
 
 //Registartion logic
 const register = async (req, res, next) => {
