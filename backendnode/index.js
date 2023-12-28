@@ -6,28 +6,7 @@ const tableModel = require("./models/table");
 var Cronjob = require("cron").CronJob;
 const app = express();
 
-// const job = new Cronjob(
-//     // '*/4 * * * * *',
-//     '0 * * * *',
-//     function(){
-//         // update()
-//         // console.log('hi');
-//     },
-//     null,
-//     true,
-// )
-// job.start()
 
-// async function update (){
-//     console.log('hi');
-//     await tableModel.updateMany(
-//         {},{
-//             $set:{
-//                 isAvailable:true
-//             }
-//         }
-//     )
-// }
 const corsOptions = {
   origin: "*",
   credentials: true, //access-control-allow-credentials:true
@@ -39,7 +18,6 @@ app.get("/", (req, res) => {
 
 app.use(cors(corsOptions)); // Use this after the variable declaration
 const dbUrl = "mongodb://127.0.0.1:27017/iamneo";
-// const dbUrl ="mongodb+srv://abhishek:abhishek03@democluster.9m513.mongodb.net/iamneoFoodApp?retryWrites=true&w=majority";
 mongoose.connect(
   dbUrl,
   {
