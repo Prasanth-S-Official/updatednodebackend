@@ -1,127 +1,60 @@
 const express = require('express');
-const app = express();
-const path = require('path'); // Import the 'path' module to handle file paths
-const fs = require('fs');
 const bodyParser = require('body-parser');
 
-const getReq = require('./methods/getRequest');
-const postReq = require('./methods/postRequest');
-const putReq = require('./methods/putRequest');
-const deleteReq = require('./methods/deleteRequest');
-let customers = require('./data/customer.json');
+const app = express();
+const PORT = 8080;
 
-// Set up EJS as the view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); // Set the directory where EJS templates are located
+app.use(bodyParser.json());
 
-// Serve static assets from the "views" directory
-app.use(express.static('views'));
-
-// Middleware to make 'customers' available in requests
-app.use((req, res, next) => {
-  req.customers = customers;
-  next();
-});
-
-// Routes for handling different HTTP methods
-app.get('/api/customers', getReq);
-app.get('/api/customers/:id', getReq);
-app.post('/api/customers', postReq);
-app.put('/api/customers/:id', putReq);
-app.delete('/api/customers/:id', deleteReq);
-
-app.get('/add-customer', (req, res) => {
-  res.render('addCustomer');
-});
-
-app.get('/get-customer', (req, res) => {
-  res.render('getCustomer', { customers: req.customers }); // Pass the customers array to the template
-  
-});
-
-app.get('/updateCustomer', (req, res) => {
-  const customerId = req.query.customerId;
-  const customersData = fs.readFileSync('./data/customer.json', 'utf8');
-  const customers = JSON.parse(customersData);
-  const customer = customers.find(cust => cust.id === customerId);
-  res.render('updateCustomer', { customer });
-});
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Route to handle the POST request
-app.post('/update-customer', (req, res) => {
-  const customerId = req.body.customerId;
-
-  fs.readFile('./data/customer.json', 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error reading customer data file');
-    }
-
-    const customerData = JSON.parse(data);
-    const customerIndex = customerData.findIndex((c) => c.id === customerId);
-
-    if (customerIndex === -1) {
-      return res.status(404).send('Customer not found');
-    }
-
-    // Update the customer's information with the new values
-    customerData[customerIndex].name = req.body.name;
-    customerData[customerIndex].email = req.body.email;
-    customerData[customerIndex].phone = req.body.phone;
-    customerData[customerIndex].address = req.body.address;
-    customerData[customerIndex].accountNumber = req.body.accountNumber;
-
-    fs.writeFile('./data/customer.json', JSON.stringify(customerData, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Error writing customer data file');
-      }
-
-      // Update req.customers with the new data (optional)
-      req.customers = customerData;
-
-      // Redirect to the updated customer page
-      res.render('getCustomer', { customers: customerData });
-    });
-  });
-});
-
-app.get('/deleteCustomer', (req, res) => {
-  const customerId = req.query.customerId;
-
-  // Find the index of the customer with the specified customerId
-  const customerIndex = customers.findIndex((customer) => customer.id === customerId);
-
-  if (customerIndex === -1) {
-    return res.status(404).send('Customer not found');
+// Array to store payment data
+const paymentsData = [
+  {
+    "paymentMode": "Credit Card",
+    "orderId": 1,
+    "customerId": 2,
+    "email": "john@example.com",
+    "customerName": "John Doe",
+    "paymentDesc": "Payment for order #123",
+    "phNo": "1234567890",
+    "totalPrice": 100.5,
+    "status": "Success"
+  },
+  {
+    "paymentMode": "PayPal",
+    "orderId": 2,
+    "customerId": 2,
+    "email": "alice@example.com",
+    "customerName": "Alice Smith",
+    "paymentDesc": "Payment for order #456",
+    "phNo": "9876543210",
+    "totalPrice": 75.25,
+    "status": "Pending"
   }
+];
 
-  // Remove the customer from the customers array
-  customers.splice(customerIndex, 1);
-
-  // Update the customer.json file with the modified customers array
-  fs.writeFile('./data/customer.json', JSON.stringify(customers, null, 2), (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error writing customer data file');
-    }
-
-    // Redirect to the updated customer page
-    res.render('getCustomer', { customers });
-  });
+// Endpoint to add a payment
+app.post('/api/payments', (req, res) => {
+  try {
+    const newPayment = req.body;
+    paymentsData.push(newPayment);
+    res.json({ message: 'Payment added successfully', data: newPayment });
+  } catch (error) {
+    console.error('Error adding payment:', error);
+    res.status(500).json({ error: 'Error adding payment' });
+  }
 });
 
-// Handle 404 errors
-app.use((req, res) => {
-  res.status(404).json({ title: 'Not Found', message: 'Route not found' });
+// Endpoint to get all payments
+app.get('/api/payments', (req, res) => {
+  try {
+    res.json(paymentsData);
+  } catch (error) {
+    console.error('Error getting payments:', error);
+    res.status(500).json({ error: 'Error getting payments' });
+  }
 });
 
-const PORT = process.env.PORT || 3000;
-
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server started on port : ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-module.exports = app;
