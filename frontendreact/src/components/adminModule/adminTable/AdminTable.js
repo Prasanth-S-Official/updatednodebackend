@@ -117,9 +117,13 @@ function AdminTable() {
             <div className="text-center col-md-2">
               <button
                 className="button addbutton"
-                onClick={() => {
-                  addNewTable();
+                onClick={async() => {
                   setIsAdding(true)
+
+                  await addNewTable();
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  setIsAdding(false)
+
                 }}
                 disabled={isAdding}
 
