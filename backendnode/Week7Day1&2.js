@@ -5,7 +5,7 @@
 
     const dataArray = [];
 
-    const addData = (userData, callback) => {
+const addData = (userData, callback) => {
     try {
         dataArray.push(userData);
         if (callback && typeof callback === 'function') {
@@ -19,14 +19,15 @@
         }
     }
     };
-    const displayData = () => {
-    console.log('Users in the array:');
-    dataArray.forEach((user, index) => {
-        console.log(`${index + 1}. ${JSON.stringify(user)}`);
-    });
-    };
 
-    const callbackFunction = (err, addedUserData) => {
+const displayData = () => {
+      console.log('Users in the array:');
+      dataArray.forEach((user, index) => {
+          console.log(`${index + 1}. ${JSON.stringify(user)}`);
+      });
+      };
+
+const callbackFunction = (err, addedUserData) => {
     if (err) {
         console.error('Error:', err);
     } else {
@@ -96,4 +97,9 @@ writeDataToFile();
 
 readDataAndPrint();
 
-e
+module.exports = {
+writeDataToFile,
+readDataAndPrint,
+addData,
+displayData
+}
