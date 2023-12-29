@@ -37,7 +37,7 @@ mongoose.connect(
 app.use(cors());
 
 const userRoutes = require("./routes/users");
-const menuRoutes = require("./routes/menu");
+const restaurantRoutes = require("./routes/restaurant");
 
 //body parser middleware
 app.use(express.urlencoded({ extended: true }));
@@ -47,7 +47,7 @@ app.use(express.json());
 
 //router level middleware function
 app.use("/user", userRoutes);
-app.use("/restaurant", menuRoutes);
+app.use("/restaurant", restaurantRoutes);
 
 app.get("/error", (req, res) => {
   res.status(500).send("something went wrong");
