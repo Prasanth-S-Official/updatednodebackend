@@ -38,6 +38,8 @@ function OrdersPage() {
         //error
       } else {
         setmenuData(data?.data);
+console.log("data?.data",data?.data);
+
         const starterDishes = data?.data
           .filter((item) => item.category === "starter")
           .map((item) => ({ ...item, count: 0 }));

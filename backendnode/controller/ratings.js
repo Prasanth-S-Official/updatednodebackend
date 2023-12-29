@@ -21,6 +21,19 @@ const addRatings= async (req,res,next)=>{
 }
 
 
+const getAllRatings= async (req,res,next)=>{
+    try{
+       const rating= await ratingModel.find().lean();
+       res.json({
+           error:false,
+           message:"All rating details",
+           data:rating
+       })
+    }catch(err){
+        next(err)
+    }
+}
 module.exports = {
-    addRatings
+    addRatings,
+    getAllRatings
 }

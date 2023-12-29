@@ -28,6 +28,7 @@ UserRouter.post('/payment',paymentController.makePayment);
 
 //feedback
 UserRouter.post('/ratings',ratingController.addRatings)
+UserRouter.get('/getAllRatings',ratingController.getAllRatings)
 
 //booking a table
 UserRouter.post('/bookTable',tableController.bookTable);
