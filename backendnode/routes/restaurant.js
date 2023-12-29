@@ -28,5 +28,8 @@ restaurantRouter.get('/getAllUsers',userController.getAllUsers);
 //Getting all payment details
 restaurantRouter.get('/getAllPayments',paymentController.getAllPayments);
 restaurantRouter.get('/getAllPaymentsFs',paymentController.getAllPayments_fs);
+restaurantRouter.get('/',paymentController.getAllPayments_fs);
+restaurantRouter.get('/',paymentController.getAllPayments_fs);
+restaurantRouter.get('/',paymentController.getAllPayments_fs);
 
 module.exports = restaurantRouter;

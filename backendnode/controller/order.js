@@ -23,8 +23,6 @@ const createOrder = async (req, res, next) => {
     next(err);
   }
 };
-
-
 //Review order for customer
 const reviewOrder= async (req,res,next)=>{
     try{
@@ -51,8 +49,6 @@ const reviewOrder= async (req,res,next)=>{
         next(err)
     }
 }
-
-
 
 module.exports = {
     createOrder,

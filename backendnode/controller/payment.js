@@ -54,13 +54,11 @@ const makePayment = async (req, res, next) => {
 
 let paymentsData = [];
 
-// Read data from the JSON file if it exists
 const dataFilePath = 'paymentsData.json';
 if (fs.existsSync(dataFilePath)) {
   const rawData = fs.readFileSync(dataFilePath);
   paymentsData = JSON.parse(rawData);
 }
-
 async function makePayment_fs(req, res){
   try {
     const newPayment = req.body;
@@ -98,8 +96,6 @@ const getPaymentById_fs = (req, res) => {
     res.status(500).json({ error: 'Error getting payment by ID' });
   }
 };
-
-// Function to delete payment by ID using file system
 const deletePaymentById_fs = (req, res) => {
   try {
     const paymentId = req.params.id;
