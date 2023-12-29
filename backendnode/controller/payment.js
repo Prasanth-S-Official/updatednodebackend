@@ -84,7 +84,8 @@ async function getAllPayments_fs(req, res) {
 const getPaymentById_fs = (req, res) => {
   try {
     const paymentId = req.params.id;
-    const payment = paymentsData.find((payment) => payment.id === paymentId);
+    console.log("paymentId",paymentId);
+    const payment = paymentsData.find((payment) => payment.id == paymentId);
 
     if (payment) {
       res.json({ message: 'Payment found', data: payment });
