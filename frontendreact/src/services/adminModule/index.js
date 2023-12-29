@@ -17,6 +17,15 @@ const getUsersInfo = async () => {
     return { error };
   }
 };
+const getRatingInfo = async () => {
+  try {
+    const { data } = await serviceUtil.get(`/user/getAllRatings`);
+    return { data };
+  } catch (error) {
+    return { error };
+  }
+};
+
 
 const getMenuInfo = async () => {
   try {
@@ -86,4 +95,5 @@ export {
   editMenuInfo,
   addTableInfo,
   addMenuInfo,
+  getRatingInfo
 };

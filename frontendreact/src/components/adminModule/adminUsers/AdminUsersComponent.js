@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from '../../atoms/TableComponent/TableComponent';
 import rating from '../../../assets/Rating.svg';
 import './users.component.css';
-import { getUsersInfo } from '../../../services/adminModule';
+import { getRatingInfo, getUsersInfo } from '../../../services/adminModule';
 import { setusersData } from '../../../toolkit/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+
 function AdminUsersComponent() {
 	const dispatch=useDispatch();
 	const usersData = useSelector((state) => state?.user?.usersData);
@@ -16,7 +17,19 @@ function AdminUsersComponent() {
 	
 	useEffect(() => {
 		getAllUsers();
+    getAllRatingsfun();
+
 	}, []);
+
+
+  async function getAllRatingsfun()
+  {
+		const { data, error } = await getRatingInfo();
+if(data)
+{
+  console.log("daata is rating",data);
+}
+  }
 
 	const getAllUsers = async () => {
 		const { data, error } = await getUsersInfo();
@@ -144,8 +157,9 @@ function AdminUsersComponent() {
                   <th>Name</th>
                   <th>Email</th>
                   <th>PhoneNo</th>
-                  <th>Rating</th>
-                  <th>Feedback</th>
+                  <th>Action</th>
+                  {/* <th>Rating</th>
+                  <th>Feedback</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -154,8 +168,8 @@ function AdminUsersComponent() {
                     <td>{item.col1}</td>
                     <td>{item.col2}</td>
                     <td>{item.col3}</td>
-                    <td>{item.col4}</td>
-                    <td>{item.col5}</td>
+                    <td><button>View Rating</button></td>
+                    {/* <td>{item.col5}</td> */}
                   </tr>
                 ))}
               </tbody>
