@@ -1,10 +1,18 @@
 [
   {
-    "id":2,
+    "id": 2,
     "name": "raj",
     "email": "raj@example.com",
     "phoneNo": "1234567890",
     "role": "user",
     "password": "NewPassword@123"
+  },
+  {
+    "id": "123",
+    "name": "TestUser",
+    "email": "test@example.com",
+    "phoneNo": "1234567890",
+    "role": "user",
+    "password": "testpassword"
   }
 ]
