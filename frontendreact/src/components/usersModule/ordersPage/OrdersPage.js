@@ -48,6 +48,7 @@ console.log("data?.data",data?.data);
         const mainCourseDishes = data?.data
           .filter((item) => item.category === "main course")
           .map((item) => ({ ...item, count: 0 }));
+          console.log("mainCourseDishes",mainCourseDishes);
         setmainCourseData(mainCourseDishes);
 
         const desertDishes = data?.data
@@ -508,12 +509,12 @@ console.log("data?.data",data?.data);
                             <div className="row d-flex justify-content-center">
                               <img
                                 onClick={() => {
-                                  setselectedCategory("nonveg");
+                                  setselectedCategory("non veg");
                                 }}
                                 src={chickenleg}
                                 alt="chicken-leg"
                                 className={
-                                  selectedCategory === "nonveg"
+                                  selectedCategory === "non veg"
                                     ? "category-img isSelected "
                                     : "category-img !isSelectedVeg"
                                 }
@@ -718,7 +719,7 @@ console.log("data?.data",data?.data);
                             <div className="row d-flex justify-content-center">
                               <img
                                 onClick={() => {
-                                  setselectedCategory("nonveg");
+                                  setselectedCategory("non veg");
                                 }}
                                 src={chickenleg}
                                 alt="chicken-leg"
