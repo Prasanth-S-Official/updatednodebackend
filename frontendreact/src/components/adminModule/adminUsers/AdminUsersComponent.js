@@ -14,7 +14,9 @@ function AdminUsersComponent() {
 	// const [usersData, setusersData] = useState<any[]>([]);
 	const [searchText, setSearchText] = useState('');
 	const [filteredUsersData, setFilteredUsersData] = useState([]);
-	
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+const [selectedUserRating, setSelectedUserRating] = useState(null);
+
 	useEffect(() => {
 		getAllUsers();
     getAllRatingsfun();
@@ -119,9 +121,23 @@ if(data)
   // const handleSearch = () => {
   // 	filterData(searchText);
   // };
+  const RatingPopup = ({ userId, onClose }) => {
+    // Customize the popup content based on your ratingDetails structure
 
+
+    return (
+      <div className="rating-popup">
+        <h3>Rating Details</h3>
+        <p>User: {ratingDetails?.email}</p>
+        <p>Rating: {ratingDetails?.rating}</p>
+        <p>Feedback: {ratingDetails?.feedback}</p>
+        <button onClick={onClose}>Close</button>
+      </div>
+    );
+  };
   return (
-    <div className="listmenu">
+   <div>
+     <div className="listmenu">
       <div className="container-fluid">
         <div className="card cardUsers p-2">
           <div className="d-flex align-items-center justify-content-between ">
@@ -168,7 +184,10 @@ if(data)
                     <td>{item.col1}</td>
                     <td>{item.col2}</td>
                     <td>{item.col3}</td>
-                    <td><button>View Rating</button></td>
+                    <td><button onClick={()=>{
+                      setSelectedUserRating(item.id).
+                      setIsPopupOpen(true)
+                    }}>View Rating</button></td>
                     {/* <td>{item.col5}</td> */}
                   </tr>
                 ))}
@@ -223,6 +242,19 @@ if(data)
           )}
         </div>
       </div>
+    </div>
+
+    // Popup component
+
+
+// Render the popup conditionally
+{isPopupOpen && (
+  <RatingPopup
+    ratingDetails={selectedUserRating}
+    onClose={() => setIsPopupOpen(false)}
+  />
+)}
+
     </div>
   );
 }
