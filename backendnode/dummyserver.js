@@ -1,6 +1,7 @@
     
     
     const fs = require('fs');
+    const Readable = require('stream').Readable;
 
     const dataArray = [];
 
@@ -24,6 +25,8 @@
         console.log(`${index + 1}. ${JSON.stringify(user)}`);
     });
     };
+
+
     // Callback function to be passed to addData
     const callbackFunction = (err, addedUserData) => {
     if (err) {
@@ -48,28 +51,65 @@
     password: 'anotherpassword',
     role: 'admin',
     }, callbackFunction);
+    // const writeDataToFile = () => {
+    //     const jsonString = JSON.stringify(dataArray, null, 2);
+    //     fs.writeFileSync('userData.json', jsonString, 'utf8');
+    //     console.log('Data has been written to userData.json');
+    //   };
+    // const readDataAndPrint = () => {
+    //     try {
+    //       const fileData = fs.readFileSync('userData.json', 'utf8');
+    //       const readData = JSON.parse(fileData);
+      
+    //       console.log('Read data from userData.json:');
+    //       readData.forEach((user, index) => {
+    //         console.log(`${index + 1}. ${JSON.stringify(user)}`);
+    //       });
+    //     } catch (error) {
+    //       console.error('Error reading file:', error.message);
+    //     }
+    // };
+
+
     const writeDataToFile = () => {
-        const jsonString = JSON.stringify(dataArray, null, 2);
-        fs.writeFileSync('userData.json', jsonString, 'utf8');
-        console.log('Data has been written to userData.json');
+        const writeStream = fs.createWriteStream('userData.json');
+      
+        writeStream.write('[');
+        dataArray.forEach((user, index) => {
+          const comma = index === 0 ? '' : ',';
+          writeStream.write(`${comma}\n${JSON.stringify(user)}`);
+        });
+        writeStream.write('\n]');
+        writeStream.end();
+      
+        console.log('Data has been written to userData.json using streams');
       };
       
-      // Function to read data from the JSON file and print in the console
+      // Function to read data from the JSON file using streams and print in the console
       const readDataAndPrint = () => {
-        try {
-          const fileData = fs.readFileSync('userData.json', 'utf8');
+        const readStream = fs.createReadStream('userData.json', 'utf8');
+      
+        let fileData = '';
+        readStream.on('data', (chunk) => {
+          fileData += chunk;
+        });
+      
+        readStream.on('end', () => {
           const readData = JSON.parse(fileData);
       
-          console.log('Read data from userData.json:');
+          console.log('Read data from userData.json using streams:');
           readData.forEach((user, index) => {
             console.log(`${index + 1}. ${JSON.stringify(user)}`);
           });
-        } catch (error) {
+        });
+      
+        readStream.on('error', (error) => {
           console.error('Error reading file:', error.message);
-        }
+        });
       };
-      writeDataToFile();
+      
+    displayData();
+writeDataToFile();
 
 readDataAndPrint();
-    // displayData();
 

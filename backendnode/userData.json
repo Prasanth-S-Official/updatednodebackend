@@ -1,16 +1,4 @@
 [
-  {
-    "name": "John",
-    "email": "john@example.com",
-    "phoneNo": "1234567890",
-    "password": "securepassword",
-    "role": "user"
-  },
-  {
-    "name": "Alice",
-    "email": "alice@example.com",
-    "phoneNo": "9876543210",
-    "password": "anotherpassword",
-    "role": "admin"
-  }
+{"name":"John","email":"john@example.com","phoneNo":"1234567890","password":"securepassword","role":"user"},
+{"name":"Alice","email":"alice@example.com","phoneNo":"9876543210","password":"anotherpassword","role":"admin"}
 ]
