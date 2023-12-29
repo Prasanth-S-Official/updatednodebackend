@@ -18,7 +18,7 @@ function AdminMenuComponent() {
   const { addToast } = useToasts();
   useEffect(() => {
     getTheMenu();
-  }, []);
+}, [showModal]);
 
   useEffect(() => {
     if (Object.keys(selectedMenuItem).length > 0) {

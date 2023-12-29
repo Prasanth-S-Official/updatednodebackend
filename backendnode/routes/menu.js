@@ -5,8 +5,6 @@ const menuController = require('../controller/menu');
 const tableController = require('../controller/table');
 const userController = require('../controller/users');
 const paymentController = require('../controller/payment');
-const orderController = require('../controller/order');
-const ratingController  =require('../controller/ratings');
 
 
 //Adding a menu item
