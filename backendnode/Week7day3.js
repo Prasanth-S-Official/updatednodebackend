@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-
-
 const paymentsArray = [
     {
       paymentMode: 'Credit Card',
@@ -29,12 +27,12 @@ const paymentsArray = [
   
 const writeDataToFileUsingfileSystem = () => {
     const jsonString = JSON.stringify(paymentsArray, null, 2);
-    fs.writeFileSync('paymentsArray.json', jsonString, 'utf8');
-    console.log('Data has been written to userData.json');
+    fs.writeFileSync('paymentsData.json', jsonString, 'utf8');
+    console.log('Data has been written to paymentsData.json');
   };
 const readDataAndPrintUsingfileSystem = () => {
     try {
-      const fileData = fs.readFileSync('paymentsArray.json', 'utf8');
+      const fileData = fs.readFileSync('paymentsData.json', 'utf8');
       const readData = JSON.parse(fileData);
   
       console.log('Read data from paymentsArray.json:');
