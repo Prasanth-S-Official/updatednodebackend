@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const paymentsArray = [
     {
+      id:1,
       paymentMode: 'Credit Card',
       orderId: 1, // Replace with a valid order ID
       customerId: 2, // Replace with a valid user ID
@@ -13,6 +14,7 @@ const paymentsArray = [
       status: 'Success',
     },
     {
+        id:2,
       paymentMode: 'PayPal',
       orderId: 2, // Replace with a valid order ID
       customerId: 2, // Replace with a valid user ID

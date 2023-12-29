@@ -1,5 +1,6 @@
 const userModel = require("../models/users");
 
+const fs = require('fs');
 
 //Registartion logic
 const register = async (req, res, next) => {
@@ -258,7 +259,7 @@ module.exports = {
   getAllUsers,
   resetPassword,
 
-  
+
   register_fs,
   login_fs,
   getAllUsers_fs,
