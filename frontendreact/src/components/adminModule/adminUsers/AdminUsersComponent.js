@@ -125,28 +125,38 @@ if(data)
   // };
   const RatingPopup = ({ onClose }) => {
     // Assuming you have allRatingInfo as an array of rating details
-    console.log("allRatingInfo",allRatingInfo,userId);
-    const userRatings = allRatingInfo.filter((rating) => rating.customerId === userId);
-  console.log("userRatings",userRatings);
+    const userRatings = allRatingInfo.filter((rating) => rating.customerId === selectedUserRating);
+  
     return (
       <div className="rating-popup">
         <h3>Rating Details</h3>
-        {userRatings.map((ratingDetails) => (
-          <div key={ratingDetails._id}>
-            <p>User: {ratingDetails?.email}</p>
-            <p>Rating: {ratingDetails?.rating}</p>
-            <p>Feedback: {ratingDetails?.feedback}</p>
-            <hr /> {/* Add a separator between each rating */}
-          </div>
-        ))}
         <button onClick={onClose}>Close</button>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rating</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userRatings.map((ratingDetails) => (
+              <tr key={ratingDetails._id}>
+                <td>{ratingDetails?.rating}</td>
+                <td>{ratingDetails?.feedback}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   };
+  
 
   return (
-   <div>
-     <div className="listmenu">
+   <div className={`parentRating `}>
+
+     <div className={`listmenu ${isPopupOpen ? 'overlay' : ''}`}>
       <div className="container-fluid">
         <div className="card cardUsers p-2">
           <div className="d-flex align-items-center justify-content-between ">
