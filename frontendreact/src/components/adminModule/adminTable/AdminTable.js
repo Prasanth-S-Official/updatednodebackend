@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./tables.component.css";
 import adminflowchair from "../../../assets/adminflowchair.svg";
+
 import {
   addTableInfo,
   editTableInfo,
@@ -13,6 +14,7 @@ function AdminTable() {
   const [tableData, settableData] = useState([]);
   const [selectedTable, setselectedTable] = useState({});
   const { addToast } = useToasts();
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     if (Object.keys(selectedTable).length > 0) {
@@ -31,6 +33,7 @@ function AdminTable() {
       }
     } else if (error) {
     }
+
     return data.data;
   };
   const { data, error, isLoading } = useQuery([], getAllTable);
@@ -90,6 +93,7 @@ function AdminTable() {
     };
 
     const { data, error } = await addTableInfo(payload);
+
     if (data) {
       if (data.error) {
         //error
@@ -102,6 +106,7 @@ function AdminTable() {
     } else if (error) {
       addToast(error.message, { appearance: "error" });
     }
+
   };
   return (
     <div className="tables">
@@ -114,7 +119,10 @@ function AdminTable() {
                 className="button addbutton"
                 onClick={() => {
                   addNewTable();
+                  setIsAdding(true)
                 }}
+                disabled={isAdding}
+
               >
                 <i className="fa fa-plus" aria-hidden="true"></i> Add New Table
               </button>
