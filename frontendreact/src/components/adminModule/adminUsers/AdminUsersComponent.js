@@ -16,7 +16,7 @@ function AdminUsersComponent() {
 	const [filteredUsersData, setFilteredUsersData] = useState([]);
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 const [selectedUserRating, setSelectedUserRating] = useState(null);
-
+const[allRatingInfo,setRatingInfo]=useState([])
 	useEffect(() => {
 		getAllUsers();
     getAllRatingsfun();
@@ -27,9 +27,11 @@ const [selectedUserRating, setSelectedUserRating] = useState(null);
   async function getAllRatingsfun()
   {
 		const { data, error } = await getRatingInfo();
+
 if(data)
 {
   console.log("daata is rating",data);
+  setRatingInfo(data?.data)
 }
   }
 
@@ -121,20 +123,27 @@ if(data)
   // const handleSearch = () => {
   // 	filterData(searchText);
   // };
-  const RatingPopup = ({ userId, onClose }) => {
-    // Customize the popup content based on your ratingDetails structure
-
-
+  const RatingPopup = ({ onClose }) => {
+    // Assuming you have allRatingInfo as an array of rating details
+    console.log("allRatingInfo",allRatingInfo,userId);
+    const userRatings = allRatingInfo.filter((rating) => rating.customerId === userId);
+  console.log("userRatings",userRatings);
     return (
       <div className="rating-popup">
         <h3>Rating Details</h3>
-        <p>User: {ratingDetails?.email}</p>
-        <p>Rating: {ratingDetails?.rating}</p>
-        <p>Feedback: {ratingDetails?.feedback}</p>
+        {userRatings.map((ratingDetails) => (
+          <div key={ratingDetails._id}>
+            <p>User: {ratingDetails?.email}</p>
+            <p>Rating: {ratingDetails?.rating}</p>
+            <p>Feedback: {ratingDetails?.feedback}</p>
+            <hr /> {/* Add a separator between each rating */}
+          </div>
+        ))}
         <button onClick={onClose}>Close</button>
       </div>
     );
   };
+
   return (
    <div>
      <div className="listmenu">
@@ -185,7 +194,8 @@ if(data)
                     <td>{item.col2}</td>
                     <td>{item.col3}</td>
                     <td><button onClick={()=>{
-                      setSelectedUserRating(item.id).
+                      console.log("item",item);
+                      setSelectedUserRating(item.id)
                       setIsPopupOpen(true)
                     }}>View Rating</button></td>
                     {/* <td>{item.col5}</td> */}
@@ -244,13 +254,8 @@ if(data)
       </div>
     </div>
 
-    // Popup component
-
-
-// Render the popup conditionally
 {isPopupOpen && (
   <RatingPopup
-    ratingDetails={selectedUserRating}
     onClose={() => setIsPopupOpen(false)}
   />
 )}
