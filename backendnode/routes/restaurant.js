@@ -24,6 +24,7 @@ restaurantRouter.put('/table/editStatus',tableController.editTableStatus);
 
 //Getting all users accounts
 restaurantRouter.get('/getAllUsers',userController.getAllUsers);
+restaurantRouter.get('/getAllUsersFs',userController.getAllUsers_fs);
 
 //Getting all payment details
 restaurantRouter.get('/getAllPayments',paymentController.getAllPayments);

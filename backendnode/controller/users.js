@@ -143,7 +143,7 @@ if (fs.existsSync(dataFilePath)) {
 // Registration logic using file system
 const register_fs = async (req, res) => {
   try {
-    const { name, email, phoneNo, password, role } = req.body;
+    const { name, email, phoneNo, password, role,id } = req.body;
     const emailExists = usersData.some((user) => user.email === email);
 
     if (emailExists) {
@@ -154,6 +154,7 @@ const register_fs = async (req, res) => {
       });
     } else {
       const newUser = {
+        id,
         name,
         email,
         phoneNo,
