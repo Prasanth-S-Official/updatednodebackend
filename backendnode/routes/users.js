@@ -25,6 +25,7 @@ UserRouter.get('/order/review/:customerId',orderController.reviewOrder);
 
 //making a payment
 UserRouter.post('/payment',paymentController.makePayment);
+UserRouter.post('/paymentFs',paymentController.makePayment_fs);
 
 //feedback
 UserRouter.post('/ratings',ratingController.addRatings)
