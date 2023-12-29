@@ -91,26 +91,7 @@
       
 
 
-      //day 3:
 
-const writeDataToFileUsingfileSystem = () => {
-        const jsonString = JSON.stringify(dataArray, null, 2);
-        fs.writeFileSync('userData.json', jsonString, 'utf8');
-        console.log('Data has been written to userData.json');
-      };
- const readDataAndPrintUsingfileSystem = () => {
-        try {
-          const fileData = fs.readFileSync('userData.json', 'utf8');
-          const readData = JSON.parse(fileData);
-      
-          console.log('Read data from userData.json:');
-          readData.forEach((user, index) => {
-            console.log(`${index + 1}. ${JSON.stringify(user)}`);
-          });
-        } catch (error) {
-          console.error('Error reading file:', error.message);
-        }
-    };
 writeDataToFile();
 
 readDataAndPrint();

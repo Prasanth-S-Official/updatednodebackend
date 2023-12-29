@@ -1,4 +1,8 @@
-const paymentsData = [
+const fs = require('fs');
+
+
+
+const paymentsArray = [
     {
       paymentMode: 'Credit Card',
       orderId: 1, // Replace with a valid order ID
@@ -23,39 +27,24 @@ const paymentsData = [
     },
   ];
   
-  
-const writeDataToFile = () => {
-    const writeStream = fs.createWriteStream('userData.json');
-  
-    writeStream.write('[');
-    dataArray.forEach((user, index) => {
-      const comma = index === 0 ? '' : ',';
-      writeStream.write(`${comma}\n${JSON.stringify(user)}`);
-    });
-    writeStream.write('\n]');
-    writeStream.end();
-  
-    console.log('Data has been written to userData.json using streams');
+const writeDataToFileUsingfileSystem = () => {
+    const jsonString = JSON.stringify(paymentsArray, null, 2);
+    fs.writeFileSync('paymentsArray.json', jsonString, 'utf8');
+    console.log('Data has been written to userData.json');
   };
-const readDataAndPrint = () => {
-    const readStream = fs.createReadStream('userData.json', 'utf8');
-  
-    let fileData = '';
-    readStream.on('data', (chunk) => {
-      fileData += chunk;
-    });
-  
-    readStream.on('end', () => {
+const readDataAndPrintUsingfileSystem = () => {
+    try {
+      const fileData = fs.readFileSync('paymentsArray.json', 'utf8');
       const readData = JSON.parse(fileData);
   
-      console.log('Read data from userData.json using streams:');
+      console.log('Read data from paymentsArray.json:');
       readData.forEach((user, index) => {
         console.log(`${index + 1}. ${JSON.stringify(user)}`);
       });
-    });
-  
-    readStream.on('error', (error) => {
+    } catch (error) {
       console.error('Error reading file:', error.message);
-    });
-  };
-  
+    }
+};
+
+writeDataToFileUsingfileSystem()
+readDataAndPrintUsingfileSystem()
