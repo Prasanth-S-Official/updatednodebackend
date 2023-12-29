@@ -216,7 +216,7 @@ if(data)
                     <td>{item.col1}</td>
                     <td>{item.col2}</td>
                     <td>{item.col3}</td>
-                    <td><button onClick={()=>{
+                    <td><button className='ratingButton' onClick={()=>{
                       console.log("item",item);
                       setSelectedUserRating(item.id)
                       setIsPopupOpen(true)

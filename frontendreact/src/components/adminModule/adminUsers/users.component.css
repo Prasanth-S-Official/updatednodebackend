@@ -107,4 +107,7 @@
 	float: right;
 	padding:3px
   }
-  
+  .ratingButton{
+	padding: 5px;
+	border-radius: 8px;
+  }
