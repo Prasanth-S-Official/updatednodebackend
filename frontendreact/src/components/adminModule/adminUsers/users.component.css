@@ -78,9 +78,11 @@
 	transform: translate(-50%, -50%); /* Center the popup perfectly */
 	background-color: white;
 	border: 1px solid #ccc;
-	padding: 100px;
+	padding: 50px;
 	z-index: 1000; /* Ensure the popup is on top of other elements */
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	height: auto;
+	width: 300px;
   }
   
   /* Add some styles to the table within the popup */
@@ -98,5 +100,11 @@
   
   .rating-popup th {
 	background-color: #f2f2f2;
+  }
+
+  .rating-popup button{
+	background-color: red;
+	float: right;
+	padding:3px
   }
   

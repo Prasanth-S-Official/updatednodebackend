@@ -127,10 +127,13 @@ if(data)
     // Assuming you have allRatingInfo as an array of rating details
     const userRatings = allRatingInfo.filter((rating) => rating.customerId === selectedUserRating);
   
-    return (
-      <div className="rating-popup">
-        <h3>Rating Details</h3>
-        <button onClick={onClose}>Close</button>
+    if(userRatings.length)
+    {
+      return (
+<div className="rating-popup">
+                <button onClick={onClose}>X</button>
+
+        <h4>Rating Details</h4>
 
         <table>
           <thead>
@@ -150,6 +153,16 @@ if(data)
         </table>
       </div>
     );
+            }
+            else{
+              return(
+                <div className="rating-popup">
+                 <button onClick={onClose}>X</button>
+<br/>
+                 <h5> No data found</h5>
+                  </div>
+              )
+            }
   };
   
 
