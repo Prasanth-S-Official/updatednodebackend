@@ -1,5 +1,4 @@
 const userModel = require("../models/users");
-const bcrypt = require("bcryptjs");
 
 
 //Registartion logic
@@ -15,24 +14,16 @@ const register = async (req, res, next) => {
         data: null,
       });
     } else {
-      const saltrounds = 10;
-      //salt of the password
-      const salt = await bcrypt.genSalt(saltrounds);
-
-      //hash password
-      const hashedPassword = await bcrypt.hash(password, salt);
-
+     
       await userModel.insertMany([
         {
           name,
           email,
           phoneNo,
           role,
-          password: hashedPassword,
+          password,
         },
       ]);
-
-      const userData = await userModel.findOne({ email: email });
 
       res.json({
         error: false,
@@ -52,10 +43,8 @@ const login = async (req, res, next) => {
   try {
     const userData = await userModel.findOne({ email });
     if (userData) {
-      const isPasswordMatch = await bcrypt.compare(password, userData.password);
 
-      if (isPasswordMatch) {
-        let payload = { email };
+      if (userData.password==password) {
 
         res.json({
           error: false,
@@ -63,7 +52,6 @@ const login = async (req, res, next) => {
           role: userData.role,
           email: userData.email,
           name: userData.name,
-          userData: userData,
         });
 
       } else {
@@ -91,20 +79,13 @@ const resetPassword = async (req, res, next) => {
   try {
     let { email, password } = req.body;
 
-    const saltrounds = 10;
-    //salt of the password
-    const salt = await bcrypt.genSalt(saltrounds);
-
-    //hash password
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     const user = await userModel.findOne({ email }).lean();
     if (user) {
       await userModel.updateOne(
         { email },
         {
           $set: {
-            password: hashedPassword,
+            password: password,
           },
         }
       );
@@ -128,7 +109,7 @@ const resetPassword = async (req, res, next) => {
 //Getting all the users
 const getAllUsers = async (req, res, next) => {
   try {
-    const user = await userModel.find({}, { password: 0, hashedOTP: 0 }).lean();
+    const user = await userModel.find({});
 
     if (user) {
       console.log("user", user);
@@ -151,10 +132,138 @@ const getAllUsers = async (req, res, next) => {
 
 
 
+const usersData = [];
+const dataFilePath = 'usersData.json';
+
+// Read data from the JSON file if it exists
+if (fs.existsSync(dataFilePath)) {
+  const rawData = fs.readFileSync(dataFilePath);
+  usersData.push(...JSON.parse(rawData));
+}
+
+// Registration logic using file system
+const register_fs = async (req, res) => {
+  try {
+    const { name, email, phoneNo, password, role } = req.body;
+    const emailExists = usersData.some((user) => user.email === email);
+
+    if (emailExists) {
+      res.json({
+        error: true,
+        message: 'Email already exists',
+        data: null,
+      });
+    } else {
+      const newUser = {
+        name,
+        email,
+        phoneNo,
+        role,
+        password,
+      };
+
+      usersData.push(newUser);
+
+      fs.writeFileSync(dataFilePath, JSON.stringify(usersData, null, 2));
+
+      res.json({
+        error: false,
+        message: 'User Registration Successful',
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.error('Error in registration:', error);
+    res.status(500).json({ error: 'Error in registration' });
+  }
+};
+
+// Login logic using file system
+const login_fs = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = usersData.find((user) => user.email === email);
+
+    if (user) {
+      if (user.password === password) {
+        res.json({
+          error: false,
+          message: 'Login Successfully',
+          role: user.role,
+          email: user.email,
+          name: user.name,
+        });
+      } else {
+        res.json({
+          error: true,
+          message: 'Invalid Password',
+          data: null,
+        });
+      }
+    } else {
+      res.json({
+        error: true,
+        message: 'User not registered',
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.error('Error in login:', error);
+    res.status(500).json({ error: 'Error in login' });
+  }
+};
+
+// Reset password using file system
+const resetPassword_fs = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const userIndex = usersData.findIndex((user) => user.email === email);
+
+    if (userIndex !== -1) {
+      usersData[userIndex].password = password;
+      fs.writeFileSync(dataFilePath, JSON.stringify(usersData, null, 2));
+      res.json({
+        error: false,
+        message: 'User Password has been updated successfully',
+        data: null,
+      });
+    } else {
+      res.json({
+        error: false,
+        message: 'User not found',
+      });
+    }
+  } catch (error) {
+    console.error('Error in resetting password:', error);
+    res.status(500).json({ error: 'Error in resetting password' });
+  }
+};
+
+// Getting all users using file system
+const getAllUsers_fs = (req, res) => {
+  try {
+    res.json({
+      error: false,
+      message: 'All Users found successfully',
+      data: usersData.map((user) => ({ ...user, password: undefined })),
+    });
+  } catch (error) {
+    console.error('Error in getting all users:', error);
+    res.status(500).json({ error: 'Error in getting all users' });
+  }
+};
+
+
+
 
 module.exports = {
   register,
   login,
   getAllUsers,
   resetPassword,
+  
+  register_fs,
+  login_fs,
+  getAllUsers_fs,
+  resetPassword_fs,
 };
