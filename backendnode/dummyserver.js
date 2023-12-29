@@ -26,8 +26,6 @@
     });
     };
 
-
-    // Callback function to be passed to addData
     const callbackFunction = (err, addedUserData) => {
     if (err) {
         console.error('Error:', err);
@@ -51,25 +49,10 @@
     password: 'anotherpassword',
     role: 'admin',
     }, callbackFunction);
-    // const writeDataToFile = () => {
-    //     const jsonString = JSON.stringify(dataArray, null, 2);
-    //     fs.writeFileSync('userData.json', jsonString, 'utf8');
-    //     console.log('Data has been written to userData.json');
-    //   };
-    // const readDataAndPrint = () => {
-    //     try {
-    //       const fileData = fs.readFileSync('userData.json', 'utf8');
-    //       const readData = JSON.parse(fileData);
-      
-    //       console.log('Read data from userData.json:');
-    //       readData.forEach((user, index) => {
-    //         console.log(`${index + 1}. ${JSON.stringify(user)}`);
-    //       });
-    //     } catch (error) {
-    //       console.error('Error reading file:', error.message);
-    //     }
-    // };
+    displayData();
 
+
+    // day 2:
 
     const writeDataToFile = () => {
         const writeStream = fs.createWriteStream('userData.json');
@@ -84,9 +67,7 @@
       
         console.log('Data has been written to userData.json using streams');
       };
-      
-      // Function to read data from the JSON file using streams and print in the console
-      const readDataAndPrint = () => {
+    const readDataAndPrint = () => {
         const readStream = fs.createReadStream('userData.json', 'utf8');
       
         let fileData = '';
@@ -108,7 +89,28 @@
         });
       };
       
-    displayData();
+
+
+      //day 3:
+
+const writeDataToFileUsingfileSystem = () => {
+        const jsonString = JSON.stringify(dataArray, null, 2);
+        fs.writeFileSync('userData.json', jsonString, 'utf8');
+        console.log('Data has been written to userData.json');
+      };
+ const readDataAndPrintUsingfileSystem = () => {
+        try {
+          const fileData = fs.readFileSync('userData.json', 'utf8');
+          const readData = JSON.parse(fileData);
+      
+          console.log('Read data from userData.json:');
+          readData.forEach((user, index) => {
+            console.log(`${index + 1}. ${JSON.stringify(user)}`);
+          });
+        } catch (error) {
+          console.error('Error reading file:', error.message);
+        }
+    };
 writeDataToFile();
 
 readDataAndPrint();
