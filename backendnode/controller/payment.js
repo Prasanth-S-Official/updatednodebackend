@@ -61,7 +61,6 @@ if (fs.existsSync(dataFilePath)) {
   paymentsData = JSON.parse(rawData);
 }
 
-
 async function makePayment_fs(req, res){
   try {
     const newPayment = req.body;
@@ -84,10 +83,50 @@ async function getAllPayments_fs(req, res) {
     res.status(500).json({ error: 'Error getting payments' });
   }
 }
+const getPaymentById_fs = (req, res) => {
+  try {
+    const paymentId = req.params.id;
+    const payment = paymentsData.find((payment) => payment.id === paymentId);
+
+    if (payment) {
+      res.json({ message: 'Payment found', data: payment });
+    } else {
+      res.status(404).json({ error: 'Payment not found' });
+    }
+  } catch (error) {
+    console.error('Error getting payment by ID:', error);
+    res.status(500).json({ error: 'Error getting payment by ID' });
+  }
+};
+
+// Function to delete payment by ID using file system
+const deletePaymentById_fs = (req, res) => {
+  try {
+    const paymentId = req.params.id;
+    const paymentIndex = paymentsData.findIndex((payment) => payment.id === paymentId);
+
+    if (paymentIndex !== -1) {
+      const deletedPayment = paymentsData.splice(paymentIndex, 1)[0];
+
+      // Save the updated data to the JSON file
+      fs.writeFileSync(dataFilePath, JSON.stringify(paymentsData, null, 2));
+
+      res.json({ message: 'Payment deleted successfully', data: deletedPayment });
+    } else {
+      res.status(404).json({ error: 'Payment not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting payment by ID:', error);
+    res.status(500).json({ error: 'Error deleting payment by ID' });
+  }
+};
+
 
   module.exports = {
     makePayment,
     getAllPayments,
     getAllPayments_fs,
-    makePayment_fs
+    makePayment_fs,
+    getPaymentById_fs,
+    deletePaymentById_fs
   }

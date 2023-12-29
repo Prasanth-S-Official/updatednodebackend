@@ -130,8 +130,6 @@ const getAllUsers = async (req, res, next) => {
 };
 
 
-
-
 const usersData = [];
 const dataFilePath = 'usersData.json';
 
@@ -254,14 +252,12 @@ const getAllUsers_fs = (req, res) => {
 };
 
 
-
-
 module.exports = {
   register,
   login,
   getAllUsers,
   resetPassword,
-  
+
   register_fs,
   login_fs,
   getAllUsers_fs,
