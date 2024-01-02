@@ -10,27 +10,33 @@ const addRatings= async (req,res,next)=>{
             rating,
             feedback
         }])
-        res.json({
+        res.status(200).json({
             error:false,
             message:"rating has been received successfully",
             data:null
         })
     }catch(err){
-        next(err)
+
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })  
     }
 }
-
-
 const getAllRatings= async (req,res,next)=>{
     try{
-       const rating= await ratingModel.find().lean();
-       res.json({
+       const rating= await ratingModel.find();
+       res.status(200).json({
            error:false,
            message:"All rating details",
            data:rating
        })
     }catch(err){
-        next(err)
+
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })  
     }
 }
 module.exports = {

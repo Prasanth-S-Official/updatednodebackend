@@ -29,8 +29,10 @@ const addTable= async (req,res,next)=>{
         })
     }
     }catch(err){
-        next(err)
-    }
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })      }
 }
 
 //Getting the table status
@@ -43,8 +45,10 @@ const getAllTables= async (req,res,next)=>{
            data:tables
        })
     }catch(err){
-        next(err)
-    }
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })      }
 }
 
 //Editing the table status
@@ -78,8 +82,10 @@ const editTableStatus= async (req,res,next)=>{
             })
         }
     }catch(err){
-        next(err)
-    }
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })      }
 }
 
 //Booking a table for the customer
@@ -101,7 +107,7 @@ const bookTable = async (req,res,next)=>{
 
         ) 
         const data =  await tableModel.findOne({ _id: _id })
-        res.json(
+        res.status(200).json(
             {
                 error:false,
                 message:"table booked successfully",
@@ -117,8 +123,10 @@ const bookTable = async (req,res,next)=>{
             })
         }
     }catch(err){
-        next(err)
-    }
+        res.status(400).json({
+            error:true,
+            message:"Bad request"         
+        })      }
 }
 
 module.exports = {

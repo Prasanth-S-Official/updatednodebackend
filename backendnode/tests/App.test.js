@@ -2,10 +2,71 @@
 const { addMenuItem, editMenuItem, getAllMenuItems } = require("../controller/menu");
 const { createOrder,reviewOrder } = require("../controller/order");
 const { getAllPayments,makePayment } = require("../controller/payment");
+const { addRatings, getAllRatings } = require("../controller/ratings");
 const menu = require("../models/menu");
 const order = require("../models/order");
 const paymentModel = require("../models/payment");
+const ratingModel = require("../models/rating")
+const tableModel = require("../models/table")
+const userModel = require("../models/users")
 
+describe("Week8 day4",()=>{
+  describe('addRatings Controller', () => {
+    test('week8_day_4_should_add_ratings_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          customerId: 1,
+          email: 'john@example.com',
+          rating: 5,
+          feedback: 'Great service!',
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the ratingModel.insertMany method to resolve successfully
+      ratingModel.insertMany = jest.fn().mockResolvedValue([{ _id: 'sampleRatingId' }]);
+  
+      // Call the controller function
+      await addRatings(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'rating has been received successfully',
+        data: null,
+      });
+    });
+  
+    test('week8_day_4_add_ratings_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          // Missing required fields
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+      const error = new Error('Database error');
+      ratingModel.insertMany = jest.fn().mockRejectedValue(error);
+      // Call the controller function
+      await addRatings(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request'
+      });
+    });
+  });
+})
 
 describe("Week8 day5",()=>{
   describe('addMenuItem Controller', () => {
@@ -104,6 +165,8 @@ describe("Week8 day5",()=>{
         message: 'Bad request',
       });
     });
+
+
   });
   describe('editMenuItem Controller', () => {
     test('week8_day5_edit_menu_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
@@ -205,6 +268,65 @@ describe("Week8 day5",()=>{
       });
     });
   });
+
+  describe('getAllRatings Controller', () => {
+    test('week8_day_5_should_return_all_ratings_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the ratingModel.find method to resolve with sample rating data
+      const sampleRatings = [
+        {
+          _id: 'ratingId1',
+          customerId: 1,
+          email: 'john@example.com',
+          rating: 5,
+          feedback: 'Great service!',
+        },
+        // Add more sample ratings as needed
+      ];
+      ratingModel.find = jest.fn().mockResolvedValue(sampleRatings);
+  
+      // Call the controller function
+      await getAllRatings(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'All rating details',
+        data: sampleRatings,
+      });
+    });
+  
+    test('week8_day_5_get_all_ratings_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the ratingModel.find method to reject with an error
+      const error = new Error('Database error');
+      ratingModel.find = jest.fn().mockRejectedValue(error);
+  
+      // Call the controller function
+      await getAllRatings(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request'
+      });
+    });
+  });
+  
 })
   
 
@@ -307,128 +429,135 @@ describe('Week9 day1', () => {
   });
 });
 
-describe('makePayment Controller', () => {
-  test('week9_day3_should_make_payment_with_a_200_status_code', async () => {
-    // Mock Express request and response objects
-    const req = {
-      body: {
-        paymentMode: 'Credit Card',
-        orderId: 1,
-        customerId: 2,
-        email: 'john@example.com',
-        phNo: '1234567890',
-        customerName: 'John Doe',
-        paymentDesc: 'Payment for order #123',
-        totalPrice: 100.50,
-        status: 'Success',
-      },
-    };
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis(),
-    };
-
-    // Mock the paymentModel.insertMany method to resolve successfully
-    paymentModel.insertMany = jest.fn().mockResolvedValue([{ _id: 'samplePaymentId' }]);
-
-    // Call the controller function
-    await makePayment(req, res);
-
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      error: false,
-      message: 'payment has been made successfully',
-      data: null,
+describe("Week9 day3",()=>{
+  describe('makePayment Controller', () => {
+    test('week9_day3_should_make_payment_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          paymentMode: 'Credit Card',
+          orderId: 1,
+          customerId: 2,
+          email: 'john@example.com',
+          phNo: '1234567890',
+          customerName: 'John Doe',
+          paymentDesc: 'Payment for order #123',
+          totalPrice: 100.50,
+          status: 'Success',
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the paymentModel.insertMany method to resolve successfully
+      paymentModel.insertMany = jest.fn().mockResolvedValue([{ _id: 'samplePaymentId' }]);
+  
+      // Call the controller function
+      await makePayment(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'payment has been made successfully',
+        data: null,
+      });
+    });
+  
+    test('week9_day3_make_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          // Missing required fields
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+          // Mock the paymentModel.find method to reject with an error
+          const error = new Error('Database error');
+          paymentModel.insertMany = jest.fn().mockRejectedValue(error);
+  
+      // Call the controller function
+      await makePayment(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request',
+      });
     });
   });
-
-  test('week9_day3_make_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
-    // Mock Express request and response objects
-    const req = {
-      body: {
-        // Missing required fields
-      },
-    };
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis(),
-    };
-        // Mock the paymentModel.find method to reject with an error
-        const error = new Error('Database error');
-        paymentModel.insertMany = jest.fn().mockRejectedValue(error);
-
-    // Call the controller function
-    await makePayment(req, res);
-
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: true,
-      message: 'Bad request',
+  
+  describe('getAllPayments Controller', () => {
+    test('week9_day3_should_return_all_payments_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the paymentModel.find method to resolve with sample payment data
+      const samplePayments = [
+        {
+          _id: 'paymentId1',
+          paymentMode: 'Credit Card',
+          orderId: 1,
+          customerId: 2,
+          email: 'john@example.com',
+          phNo: '1234567890',
+          customerName: 'John Doe',
+          paymentDesc: 'Payment for order #123',
+          totalPrice: 100.50,
+          status: 'Success',
+        },
+        // Add more sample payments as needed
+      ];
+      paymentModel.find = jest.fn().mockResolvedValue(samplePayments);
+  
+      // Call the controller function
+      await getAllPayments(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'all payment detail',
+        data: samplePayments,
+      });
+    });
+  
+    test('week9_day3_get_all_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the paymentModel.find method to reject with an error
+      const error = new Error('Database error');
+      paymentModel.find = jest.fn().mockRejectedValue(error);
+  
+      // Call the controller function
+      await getAllPayments(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request',
+      });
     });
   });
-});
+})
 
-describe('getAllPayments Controller', () => {
-  test('week9_day3_should_return_all_payments_with_a_200_status_code', async () => {
-    // Mock Express request and response objects
-    const req = {};
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis(),
-    };
 
-    // Mock the paymentModel.find method to resolve with sample payment data
-    const samplePayments = [
-      {
-        _id: 'paymentId1',
-        paymentMode: 'Credit Card',
-        orderId: 1,
-        customerId: 2,
-        email: 'john@example.com',
-        phNo: '1234567890',
-        customerName: 'John Doe',
-        paymentDesc: 'Payment for order #123',
-        totalPrice: 100.50,
-        status: 'Success',
-      },
-      // Add more sample payments as needed
-    ];
-    paymentModel.find = jest.fn().mockResolvedValue(samplePayments);
 
-    // Call the controller function
-    await getAllPayments(req, res);
 
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      error: false,
-      message: 'all payment detail',
-      data: samplePayments,
-    });
-  });
 
-  test('week9_day3_get_all_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
-    // Mock Express request and response objects
-    const req = {};
-    const res = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis(),
-    };
-
-    // Mock the paymentModel.find method to reject with an error
-    const error = new Error('Database error');
-    paymentModel.find = jest.fn().mockRejectedValue(error);
-
-    // Call the controller function
-    await getAllPayments(req, res);
-
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: true,
-      message: 'Bad request',
-    });
-  });
-});
