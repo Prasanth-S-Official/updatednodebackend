@@ -122,7 +122,7 @@ const getAllUsers = async (req, res, next) => {
     } else {
       res.json({
         error: false,
-        message: "User not found ",
+        message: "User not found",
       });
     }
   } catch (err) {
@@ -173,8 +173,7 @@ const register_fs = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error in registration:', error);
-    res.status(500).json({ error: 'Error in registration' });
+    res.status(500).json({ message: error });
   }
 };
 
@@ -208,8 +207,7 @@ const login_fs = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error in login:', error);
-    res.status(500).json({ error: 'Error in login' });
+    res.status(500).json({ message: error });
   }
 };
 
@@ -234,8 +232,7 @@ const resetPassword_fs = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error in resetting password:', error);
-    res.status(500).json({ error: 'Error in resetting password' });
+    res.status(500).json({ message: error });
   }
 };
 
@@ -248,8 +245,7 @@ const getAllUsers_fs = (req, res) => {
       data: usersData.map((user) => ({ ...user, password: undefined })),
     });
   } catch (error) {
-    console.error('Error in getting all users:', error);
-    res.status(500).json({ error: 'Error in getting all users' });
+    res.status(500).json({ message: error });
   }
 };
 
