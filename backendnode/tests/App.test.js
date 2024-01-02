@@ -3,6 +3,7 @@ const { addMenuItem, editMenuItem, getAllMenuItems } = require("../controller/me
 const { createOrder,reviewOrder } = require("../controller/order");
 const { getAllPayments,makePayment } = require("../controller/payment");
 const { addRatings, getAllRatings } = require("../controller/ratings");
+const { addTable, getAllTables, editTableStatus, bookTable } = require("../controller/table");
 const menu = require("../models/menu");
 const order = require("../models/order");
 const paymentModel = require("../models/payment");
@@ -558,6 +559,215 @@ describe("Week9 day3",()=>{
 })
 
 
+
+
+describe('addTable Controller', () => {
+  test('should_handle_maximum_tables_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+    // Mock Express request and response objects
+    const req = {
+      body: {
+        tableNo: 16,
+        alloted: 5,
+        served: 3,
+        booked: 2,
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Call the controller function
+    await addTable(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'You have added maximum number of tables',
+      data: null,
+    });
+  });
+});
+
+describe('getAllTables Controller', () => {
+  test('should_return_all_tables_with_a_200_status_code', async () => {
+    // Mock Express request and response objects
+    const req = {};
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the tableModel.find method to resolve with sample table data
+    const sampleTables = [
+      {
+        _id: 'tableId1',
+        tableNo: 1,
+        alloted: 5,
+        served: 3,
+        booked: 2,
+      },
+      // Add more sample tables as needed
+    ];
+    tableModel.find = jest.fn().mockResolvedValue(sampleTables);
+
+    // Call the controller function
+    await getAllTables(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      error: false,
+      message: 'all table details',
+      data: sampleTables,
+    });
+  });
+
+  test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+    // Mock Express request and response objects
+    const req = {};
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the tableModel.find method to reject with an error
+    const error = new Error('Database error');
+    tableModel.find = jest.fn().mockRejectedValue(error);
+
+    // Call the controller function
+    await getAllTables(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'Bad request'    });
+  });
+});
+
+describe('editTableStatus Controller', () => {
+  test('should_edit_table_status_with_a_200_status_code', async () => {
+    // Mock Express request and response objects
+    const req = {
+      body: {
+        _id: 'tableId1',
+        alloted: 6,
+        served: 4,
+        booked: 1,
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the tableModel.updateOne method to resolve successfully
+    tableModel.updateOne = jest.fn().mockResolvedValue({});
+
+    // Call the controller function
+    await editTableStatus(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      error: false,
+      message: 'table status has been updated successfully',
+      data: null,
+    });
+  });
+
+  test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+    // Mock Express request and response objects
+    const req = {
+      body: {
+        // Missing required fields
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Call the controller function
+    await editTableStatus(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'Bad request',
+    });
+  });
+});
+
+describe('bookTable Controller', () => {
+  test('should_book_table_with_a_200_status_code', async () => {
+    // Mock Express request and response objects
+    const req = {
+      body: {
+        _id: 'tableId1',
+        bookingDate: '2022-12-01',
+        bookingTime: '19:00:00',
+        booked: true,
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the tableModel.findByIdAndUpdate method to resolve successfully
+    tableModel.findByIdAndUpdate = jest.fn().mockResolvedValue({});
+
+    // Mock the tableModel.findOne method to resolve with sample table data
+    const sampleTable = {
+      _id: 'tableId1',
+      tableNo: 1,
+      alloted: 5,
+      served: 3,
+      booked: true,
+    };
+    tableModel.findOne = jest.fn().mockResolvedValue(sampleTable);
+
+    // Call the controller function
+    await bookTable(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      error: false,
+      message: 'table booked successfully',
+      data: sampleTable,
+    });
+  });
+
+  test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+    // Mock Express request and response objects
+    const req = {
+      body: {
+        // Missing required fields
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+    const error = new Error('Database error');
+    tableModel.findOne = jest.fn().mockResolvedValue(error);
+
+    // Call the controller function
+    await bookTable(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'Bad request',
+    });
+  });
+});
 
 
 

@@ -15,7 +15,7 @@ const addTable= async (req,res,next)=>{
 
         }])
         console.log(req.body);
-        res.json({
+        res.status(200).json({
             error:false,
             message:"table has been added successfully",
             data:null
@@ -38,8 +38,8 @@ const addTable= async (req,res,next)=>{
 //Getting the table status
 const getAllTables= async (req,res,next)=>{
     try{
-       const tables= await tableModel.find().lean();
-       res.json({
+       const tables= await tableModel.find();
+       res.status(200).json({
            error:false,
            message:"all table details",
            data:tables
@@ -66,7 +66,7 @@ const editTableStatus= async (req,res,next)=>{
                 }
             }
         )
-        res.json(
+        res.status(200).json(
             {
                 error:false,
                 message:"table status has been updated successfully",
