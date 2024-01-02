@@ -48,3 +48,8 @@ const readDataAndPrintUsingfileSystem = () => {
 
 writeDataToFileUsingfileSystem()
 readDataAndPrintUsingfileSystem()
+
+module.exports={
+  writeDataToFileUsingfileSystem,
+  readDataAndPrintUsingfileSystem
+}

@@ -22,18 +22,5 @@
     "phNo": "9876543210",
     "totalPrice": 75.25,
     "status": "Pending"
-  },
-
-  {
-    "id": 2,
-    "paymentMode": "Credit Card",
-    "orderId": 8,
-    "customerId": 20,
-    "email": "raj@example.com",
-    "customerName": "John Doe",
-    "paymentDesc": "Payment for order #123",
-    "phNo": "1234567890",
-    "totalPrice": 100.5,
-    "status": "Success"
   }
 ]
