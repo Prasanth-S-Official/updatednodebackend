@@ -20,8 +20,10 @@ const createOrder = async (req, res, next) => {
       data: null,
     });
   } catch (err) {
-    next(err);
-  }
+    res.status(400).json({
+      error:true,
+      message:"Bad request",           
+  })    }
 };
 //Review order for customer
 const reviewOrder= async (req,res,next)=>{
@@ -46,8 +48,10 @@ const reviewOrder= async (req,res,next)=>{
         }
         
     }catch(err){
-        next(err)
-    }
+      res.status(400).json({
+        error:true,
+        message:"Bad request",           
+    })      }
 }
 
 module.exports = {

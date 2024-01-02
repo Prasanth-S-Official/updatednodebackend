@@ -46,7 +46,7 @@ const editMenuItem= async (req,res,next)=>{
 
         if(name && category && status && price){
 
-        const menuItem= await menuModel.findOne({_id}).lean();
+        const menuItem= await menuModel.findOne({_id});
         if(menuItem){
         await menuModel.updateOne(
             {_id},{
@@ -63,12 +63,12 @@ const editMenuItem= async (req,res,next)=>{
         )
         }
         else{
-            res.json({
+            res.status(404).json({
                 error:false,
                 message:"menu item not found ",
             })
         }
-        res.json(
+        res.status(200).json(
             {
                 error:false,
                 message:"menu item has been updated successfully",
@@ -98,8 +98,8 @@ const editMenuItem= async (req,res,next)=>{
 //getting all menu items
 const getAllMenuItems= async (req,res,next)=>{
     try{
-       const menuItems= await menuModel.find().lean();
-       res.json({
+       const menuItems= await menuModel.find({});
+       res.status(200).json({
            error:false,
            message:"all menu items",
            data:menuItems
