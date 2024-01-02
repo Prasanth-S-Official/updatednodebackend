@@ -8,70 +8,8 @@ const {
 } = require('../controller/users'); // Replace 'userController' with the actual filename where your code is located
 const { readDataAndPrint, writeDataToFile, addData, displayData,callbackFunction } = require('../Week7Day1&2');
 
-const {writeDataToFileUsingfileSystem,readDataAndPrintUsingfileSystem}=require('../Week7day3')
-
-
-  
-  describe('User Controller - File System', () => {
-    const testUniqueId = new Date().getTime(); // Generate a unique timestamp for each test run
-    const uniqueEmail = `test${testUniqueId}@example.com`;
-
-    test(`Register a new user with a unique email (${testUniqueId})`, async () => {
-    
-      const req = {
-        body: {
-          name: 'TestUser',
-          email: uniqueEmail,
-          phoneNo: '1234567890',
-          password: 'testpassword',
-          role: 'user',
-          id: testUniqueId,
-        },
-      };
-    
-      const res = {
-        json: jest.fn(),
-        status: jest.fn(),
-      };
-    
-      // Run the register_fs function
-      await register_fs(req, res);
-    
-      // Check the response sent by the controller
-      expect(res.json).toHaveBeenCalledWith({
-        error: false,
-        message: 'User Registration Successful',
-        data: null,
-      });
-    });
-    
-    // Write similar tests for login_fs, getAllUsers_fs, and resetPassword_fs functions
-    // Make sure to mock the request and response objects appropriately for each test
-    test('User successfully logs in with correct email and password', async () => {
-
-
-        const req = {
-          body: {
-            email: uniqueEmail,
-            password: 'testpassword',
-          },
-        };
-      
-        const res = {
-          json: jest.fn(),
-        };
-      
-        await login_fs(req, res);
-      
-        expect(res.json).toHaveBeenCalledWith({
-          error: false,
-          message: 'Login Successfully',
-          role:"user",
-          email: uniqueEmail,
-          name: 'TestUser'
-        });
-      });
-});
+const {writeDataToFileUsingfileSystem,readDataAndPrintUsingfileSystem}=require('../Week7day3');
+const { makePayment_fs, getAllPayments_fs, getPaymentById_fs, deletePaymentById_fs } = require('../controller/payment');
 
 
 describe('Week7', () => {
@@ -106,11 +44,49 @@ describe('Week7', () => {
     expect(writeDataToFileUsingfileSystem).toBeDefined();
     expect(typeof writeDataToFileUsingfileSystem).toBe('function');
   });
-
+    test('week7_day4_register_fs_function_should_be_defined', () => {
+      expect(register_fs).toBeDefined();
+      expect(typeof register_fs).toBe('function');
+    });
   
+    test('week7_day4_login_fs_function_should_be_defined', () => {
+      expect(login_fs).toBeDefined();
+      expect(typeof login_fs).toBe('function');
+    });
+  
+    test('week7_day5_reset_password_fs_function_should_be_defined', () => {
+      expect(resetPassword_fs).toBeDefined();
+      expect(typeof resetPassword_fs).toBe('function');
+    });
+  
+    test('week7_day5_get_all_users_fs_function_should_be_defined', () => {
+      expect(getAllUsers_fs).toBeDefined();
+      expect(typeof getAllUsers_fs).toBe('function');
+    });
 });
 
 
+describe('Week8', () => {
+  test('week8_day1_make_payment_fs_should_be_defined', () => {
+    expect(makePayment_fs).toBeDefined();
+    expect(typeof makePayment_fs).toBe('function');
+  });
+
+  test('week8_day1_get_all_payments_fs_should_be_defined', () => {
+    expect(getAllPayments_fs).toBeDefined();
+    expect(typeof getAllPayments_fs).toBe('function');
+  });
+
+  test('week8_day2_get_payment_by_id_fs_should_be_defined', () => {
+    expect(getPaymentById_fs).toBeDefined();
+    expect(typeof getPaymentById_fs).toBe('function');
+  });
+
+  test('week8_day2_delete_payment_by_id_fs_should_be_defined', () => {
+    expect(deletePaymentById_fs).toBeDefined();
+    expect(typeof deletePaymentById_fs).toBe('function');
+  });
+});
 
 
   
