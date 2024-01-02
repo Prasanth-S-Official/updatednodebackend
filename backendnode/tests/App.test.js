@@ -6,7 +6,7 @@ const {
   getAllUsers_fs,
   resetPassword_fs,
 } = require('../controller/users'); // Replace 'userController' with the actual filename where your code is located
-const { readDataAndPrint, writeDataToFile, addData, displayData } = require('../Week7Day1&2');
+const { readDataAndPrint, writeDataToFile, addData, displayData,callbackFunction } = require('../Week7Day1&2');
 
 const {writeDataToFileUsingfileSystem,readDataAndPrintUsingfileSystem}=require('../Week7day3')
 
@@ -74,35 +74,40 @@ const {writeDataToFileUsingfileSystem,readDataAndPrintUsingfileSystem}=require('
 });
 
 
-describe('Module Functions', () => {
-  test('writeDataToFile function should be defined', () => {
-    expect(writeDataToFile).toBeDefined();
-    expect(typeof writeDataToFile).toBe('function');
-  });
-
-  test('readDataAndPrint function should be defined', () => {
-    expect(readDataAndPrint).toBeDefined();
-    expect(typeof readDataAndPrint).toBe('function');
-  });
-
-  test('addData function should be defined', () => {
+describe('Week7', () => {
+  test('week7_day1_add_data_should_be_defined', () => {
     expect(addData).toBeDefined();
     expect(typeof addData).toBe('function');
   });
 
-  test('displayData function should be defined', () => {
+  test('week7_day1_display_data_should_be_defined', () => {
     expect(displayData).toBeDefined();
     expect(typeof displayData).toBe('function');
   });
-  test('readDataAndPrintUsingfileSystem function should be defined', () => {
+  test('week7_day1_callback_should_be_defined', () => {
+    expect(callbackFunction).toBeDefined();
+    expect(typeof callbackFunction).toBe('function');
+  });
+  test('week7_day2_write_data_to_file_should_be_defined', () => {
+    expect(writeDataToFile).toBeDefined();
+    expect(typeof writeDataToFile).toBe('function');
+  });
+
+  test('week7_day2_read_data_and_print_should_be_defined', () => {
+    expect(readDataAndPrint).toBeDefined();
+    expect(typeof readDataAndPrint).toBe('function');
+  });
+  test('week7_day3_read_data_and_print_using_file_system_should_be_defined', () => {
     expect(readDataAndPrintUsingfileSystem).toBeDefined();
     expect(typeof readDataAndPrintUsingfileSystem).toBe('function');
   });
 
-  test('writeDataToFileUsingfileSystem function should be defined', () => {
+  test('week7_day3_write_data_to_file_using_file_system_should_be_defined', () => {
     expect(writeDataToFileUsingfileSystem).toBeDefined();
     expect(typeof writeDataToFileUsingfileSystem).toBe('function');
   });
+
+  
 });
 
 

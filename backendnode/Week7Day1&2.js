@@ -100,6 +100,7 @@ readDataAndPrint();
 module.exports = {
 writeDataToFile,
 readDataAndPrint,
+callbackFunction,
 addData,
 displayData
 }
