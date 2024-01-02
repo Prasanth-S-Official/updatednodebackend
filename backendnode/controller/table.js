@@ -74,13 +74,7 @@ const editTableStatus= async (req,res,next)=>{
             }
         )
         }
-        else{
-            res.status(400).json({
-                error:true,
-                message:"table has been added successfully",
-                data:null
-            })
-        }
+        
     }catch(err){
         res.status(400).json({
             error:true,
