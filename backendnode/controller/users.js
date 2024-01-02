@@ -261,6 +261,7 @@ module.exports = {
   resetPassword,
 
 
+  register_fs,
   login_fs,
   getAllUsers_fs,
   resetPassword_fs,

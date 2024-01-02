@@ -1,4 +1,3 @@
-const express=require('express');
 const menuModel = require('../models/menu');
 
 //adding a menu item
