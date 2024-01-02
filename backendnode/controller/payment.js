@@ -21,14 +21,17 @@ const makePayment = async (req, res, next) => {
             status
         },
       ]);
-      res.json({
+      res.status(200).json({
         error: false,
         message: "payment has been made successfully",
         data: null,
       }); 
    
     } catch (err) {
-      next(err);
+      res.status(400).json({
+        error:true,
+        message:"Bad request",           
+    })  
     }
   };
 
@@ -36,14 +39,17 @@ const makePayment = async (req, res, next) => {
 
   const getAllPayments= async (req,res,next)=>{
     try{
-       const payments= await paymentModel.find().lean();
-       res.json({
+       const payments= await paymentModel.find();
+       res.status(200).json({
            error:false,
            message:"all payment detail",
            data:payments
        })
     }catch(err){
-        next(err)
+      res.status(400).json({
+        error:true,
+        message:"Bad request",           
+    })  
     }
 }
 

@@ -14,7 +14,7 @@ const createOrder = async (req, res, next) => {
         status
       },
     ]);
-    res.json({
+    res..status(200).json({
       error: false,
       message: "order has been placed successfully",
       data: null,
@@ -30,7 +30,7 @@ const reviewOrder= async (req,res,next)=>{
     try{
         let {customerId} = req.params;
 
-        const order= await orderModel.findOne({customerId}).lean();
+        const order= await orderModel.findOne({customerId});
         if(order){
             res.json(
                 {
