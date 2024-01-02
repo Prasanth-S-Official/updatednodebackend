@@ -25,13 +25,16 @@ const addMenuItem= async (req,res,next)=>{
     else{
         res.status(400).json({
             error:true,
-            message:"please eneter proper menu detail",           
+            message:"please enter proper menu detail",           
             data:null
         })
     }
     }catch(err){
-        next(err)
-    }
+        res.status(400).json({
+            error:true,
+            message:"Bad request",           
+        })  
+       }
 }
 
 //editing a menu item
@@ -83,7 +86,11 @@ const editMenuItem= async (req,res,next)=>{
 
         }
     }catch(err){
-        next(err)
+        res.status(400).json({
+            error:true,
+            message:"Bad request",           
+        })  
+    
     }
 }
 
@@ -97,12 +104,13 @@ const getAllMenuItems= async (req,res,next)=>{
            data:menuItems
        })
     }catch(err){
-        next(err)
+        res.status(400).json({
+            error:true,
+            message:"Bad request",           
+        })  
+    
     }
 }
-
-
-
 
 
 module.exports = {
