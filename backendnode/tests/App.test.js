@@ -4,6 +4,7 @@ const { createOrder,reviewOrder } = require("../controller/order");
 const { getAllPayments,makePayment } = require("../controller/payment");
 const { addRatings, getAllRatings } = require("../controller/ratings");
 const { addTable, getAllTables, editTableStatus, bookTable } = require("../controller/table");
+const { register, login } = require("../controller/users");
 const menu = require("../models/menu");
 const order = require("../models/order");
 const paymentModel = require("../models/payment");
@@ -430,6 +431,197 @@ describe('Week9 day1', () => {
   });
 });
 
+
+describe("Week 9 day 2",()=>{
+  describe('addTable Controller', () => {
+    test('week9_day2_add_table_should_handle_maximum_tables_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          tableNo: 16,
+          alloted: 5,
+          served: 3,
+          booked: 2,
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Call the controller function
+      await addTable(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'You have added maximum number of tables',
+        data: null,
+      });
+    });
+  });
+  
+  describe('getAllTables Controller', () => {
+    test('week9_day2_get_all_table_should_return_all_tables_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the tableModel.find method to resolve with sample table data
+      const sampleTables = [
+        {
+          _id: 'tableId1',
+          tableNo: 1,
+          alloted: 5,
+          served: 3,
+          booked: 2,
+        },
+        // Add more sample tables as needed
+      ];
+      tableModel.find = jest.fn().mockResolvedValue(sampleTables);
+  
+      // Call the controller function
+      await getAllTables(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'all table details',
+        data: sampleTables,
+      });
+    });
+  
+    test('week9_day2_get_all_table_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {};
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the tableModel.find method to reject with an error
+      const error = new Error('Database error');
+      tableModel.find = jest.fn().mockRejectedValue(error);
+  
+      // Call the controller function
+      await getAllTables(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request'    });
+    });
+  });
+  
+  describe('editTableStatus Controller', () => {
+    test('week9_day2_edit_table_should_edit_table_status_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          _id: 'tableId1',
+          alloted: 6,
+          served: 4,
+          booked: 1,
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the tableModel.updateOne method to resolve successfully
+      tableModel.updateOne = jest.fn().mockResolvedValue({});
+  
+      // Call the controller function
+      await editTableStatus(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'table status has been updated successfully',
+        data: null,
+      });
+    });  
+  });
+  
+  describe('bookTable Controller', () => {
+    test('week9_day_2_book_table_should_book_table_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          _id: 'tableId1',
+          bookingDate: '2022-12-01',
+          bookingTime: '19:00:00',
+          booked: true,
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      // Mock the tableModel.findByIdAndUpdate method to resolve successfully
+      tableModel.findByIdAndUpdate = jest.fn().mockResolvedValue({});
+  
+      // Mock the tableModel.findOne method to resolve with sample table data
+      const sampleTable = {
+        _id: 'tableId1',
+        tableNo: 1,
+        alloted: 5,
+        served: 3,
+        booked: true,
+      };
+      tableModel.findOne = jest.fn().mockResolvedValue(sampleTable);
+  
+      // Call the controller function
+      await bookTable(req, res);
+  
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'table booked successfully',
+        data: sampleTable,
+      });
+    });
+    test('week9_day_2_book_table_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+      // Mock Express request and response objects
+      const req = {
+        body: {
+          _id: 'tableId1',
+          bookingDate: '2022-12-01',
+          bookingTime: '19:00:00',
+          booked: true,
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+      const error = new Error('Database error');
+      tableModel.findByIdAndUpdate = jest.fn().mockRejectedValue(error);
+      tableModel.findOne = jest.fn().mockRejectedValue(error);
+  
+      // Call the controller function
+      await bookTable(req, res);
+  
+      // Assertions
+      // expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: true,
+        message: 'Bad request',
+      });
+    });
+  });
+})
+
 describe("Week9 day3",()=>{
   describe('makePayment Controller', () => {
     test('week9_day3_should_make_payment_with_a_200_status_code', async () => {
@@ -559,201 +751,189 @@ describe("Week9 day3",()=>{
 })
 
 
+describe('Auth Controller', () => {
+  test('should_register_user_successfully', async () => {
+    const req = {
+      body: {
+        name: 'John Doe',
+        email: 'john@example.com',
+        phoneNo: '1234567890',
+        password: 'securepassword',
+        role: 'user',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
 
+    // Mock the userModel.findOne method to resolve with null (indicating that email does not exist)
+    userModel.findOne = jest.fn().mockResolvedValue(null);
+    // Mock the userModel.insertMany method to resolve successfully
+    userModel.insertMany = jest.fn().mockResolvedValue([{ _id: 'sampleUserId' }]);
 
-describe("Week 9 day 2",()=>{
-  describe('addTable Controller', () => {
-    test('week9_day2_add_table_should_handle_maximum_tables_and_respond_with_a_400_status_code_and_an_error_message', async () => {
-      // Mock Express request and response objects
-      const req = {
-        body: {
-          tableNo: 16,
-          alloted: 5,
-          served: 3,
-          booked: 2,
-        },
-      };
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-  
-      // Call the controller function
-      await addTable(req, res);
-  
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: true,
-        message: 'You have added maximum number of tables',
-        data: null,
-      });
+    // Call the register function
+    await register(req, res);
+
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+    expect(userModel.insertMany).toHaveBeenCalledWith([{
+      name: 'John Doe',
+      email: 'john@example.com',
+      phoneNo: '1234567890',
+      role: 'user',
+      password: 'securepassword',
+    }]);
+    expect(res.json).toHaveBeenCalledWith({
+      error: false,
+      message: 'User Registration Successfull',
+      data: null,
     });
   });
-  
-  describe('getAllTables Controller', () => {
-    test('week9_day2_get_all_table_should_return_all_tables_with_a_200_status_code', async () => {
-      // Mock Express request and response objects
-      const req = {};
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-  
-      // Mock the tableModel.find method to resolve with sample table data
-      const sampleTables = [
-        {
-          _id: 'tableId1',
-          tableNo: 1,
-          alloted: 5,
-          served: 3,
-          booked: 2,
-        },
-        // Add more sample tables as needed
-      ];
-      tableModel.find = jest.fn().mockResolvedValue(sampleTables);
-  
-      // Call the controller function
-      await getAllTables(req, res);
-  
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({
-        error: false,
-        message: 'all table details',
-        data: sampleTables,
-      });
-    });
-  
-    test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
-      // Mock Express request and response objects
-      const req = {};
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-  
-      // Mock the tableModel.find method to reject with an error
-      const error = new Error('Database error');
-      tableModel.find = jest.fn().mockRejectedValue(error);
-  
-      // Call the controller function
-      await getAllTables(req, res);
-  
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: true,
-        message: 'Bad request'    });
+  test('should_return_error_for_existing_email_in_registration', async () => {
+    const req = {
+      body: {
+        name: 'John Doe',
+        email: 'john@example.com',
+        phoneNo: '1234567890',
+        password: 'securepassword',
+        role: 'user',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the userModel.findOne method to resolve with existing user data
+    userModel.findOne = jest.fn().mockResolvedValue({ email: 'john@example.com' });
+
+    // Call the register function
+    await register(req, res);
+
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'email already exits',
+      data: null,
     });
   });
-  
-  describe('editTableStatus Controller', () => {
-    test('should_edit_table_status_with_a_200_status_code', async () => {
-      // Mock Express request and response objects
-      const req = {
-        body: {
-          _id: 'tableId1',
-          alloted: 6,
-          served: 4,
-          booked: 1,
-        },
-      };
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-  
-      // Mock the tableModel.updateOne method to resolve successfully
-      tableModel.updateOne = jest.fn().mockResolvedValue({});
-  
-      // Call the controller function
-      await editTableStatus(req, res);
-  
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({
-        error: false,
-        message: 'table status has been updated successfully',
-        data: null,
-      });
+  test('should_login_user_successfully', async () => {
+    const req = {
+      body: {
+        email: 'john@example.com',
+        password: 'securepassword',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the userModel.findOne method to resolve with user data
+    userModel.findOne = jest.fn().mockResolvedValue({
+      email: 'john@example.com',
+      password: 'securepassword',
+      role: 'user',
+      name: 'John Doe',
     });
-  
-  
-    
-  });
-  
-  describe('bookTable Controller', () => {
-    test('should_book_table_with_a_200_status_code', async () => {
-      // Mock Express request and response objects
-      const req = {
-        body: {
-          _id: 'tableId1',
-          bookingDate: '2022-12-01',
-          bookingTime: '19:00:00',
-          booked: true,
-        },
-      };
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-  
-      // Mock the tableModel.findByIdAndUpdate method to resolve successfully
-      tableModel.findByIdAndUpdate = jest.fn().mockResolvedValue({});
-  
-      // Mock the tableModel.findOne method to resolve with sample table data
-      const sampleTable = {
-        _id: 'tableId1',
-        tableNo: 1,
-        alloted: 5,
-        served: 3,
-        booked: true,
-      };
-      tableModel.findOne = jest.fn().mockResolvedValue(sampleTable);
-  
-      // Call the controller function
-      await bookTable(req, res);
-  
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({
-        error: false,
-        message: 'table booked successfully',
-        data: sampleTable,
-      });
-    });
-  
-    test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
-      // Mock Express request and response objects
-      const req = {
-        body: {
-          _id: 'tableId1',
-          bookingDate: '2022-12-01',
-          bookingTime: '19:00:00',
-          booked: true,
-        },
-      };
-      const res = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-      const error = new Error('Database error');
-      tableModel.findByIdAndUpdate = jest.fn().mockRejectedValue(error);
-      tableModel.findOne = jest.fn().mockRejectedValue(error);
-  
-      // Call the controller function
-      await bookTable(req, res);
-  
-      // Assertions
-      // expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: true,
-        message: 'Bad request',
-      });
+
+    // Call the login function
+    await login(req, res);
+
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+    expect(res.json).toHaveBeenCalledWith({
+      error: false,
+      message: 'Login Successfully',
+      role: 'user',
+      email: 'john@example.com',
+      name: 'John Doe',
     });
   });
-})
+  test('should_return_error_for_invalid_password_in_login', async () => {
+    const req = {
+      body: {
+        email: 'john@example.com',
+        password: 'wrongpassword',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
 
+    // Mock the userModel.findOne method to resolve with user data
+    userModel.findOne = jest.fn().mockResolvedValue({
+      email: 'john@example.com',
+      password: 'securepassword',
+      role: 'user',
+      name: 'John Doe',
+    });
 
+    // Call the login function
+    await login(req, res);
 
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'Invalid Password',
+      data: null,
+    });
+  });
+  test('should_return_error_for_nonexistent_email_in_login', async () => {
+    const req = {
+      body: {
+        email: 'nonexistent@example.com',
+        password: 'password',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the userModel.findOne method to resolve with null (indicating that email does not exist)
+    userModel.findOne = jest.fn().mockResolvedValue(null);
+
+    // Call the login function
+    await login(req, res);
+
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'User not registered',
+      data: null,
+    });
+  });
+  test('should_handle_errors_and_respond_with_a_400_status_code_in_login', async () => {
+    const req = {
+      body: {
+        email: 'john@example.com',
+        password: 'securepassword',
+      },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
+
+    // Mock the userModel.findOne method to reject with an error
+    const error = new Error('Database error');
+    userModel.findOne = jest.fn().mockRejectedValue(error);
+
+    // Call the login function
+    await login(req, res);
+
+    // Assertions
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'john@example.com' });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: true,
+      message: 'Bad request',
+    });
+  });
+});

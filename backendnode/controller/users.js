@@ -70,7 +70,11 @@ const login = async (req, res, next) => {
       });
     }
   } catch (err) {
-    next(err);
+
+    res.status(400).json({
+      error:true,
+      message:"Bad request"         
+  })  
   }
 };
 
@@ -102,8 +106,10 @@ const resetPassword = async (req, res, next) => {
       data: null,
     });
   } catch (err) {
-    next(err);
-  }
+    res.status(400).json({
+      error:true,
+      message:"Bad request"         
+  })    }
 };
 
 
@@ -126,8 +132,10 @@ const getAllUsers = async (req, res, next) => {
       });
     }
   } catch (err) {
-    next(err);
-  }
+    res.status(400).json({
+      error:true,
+      message:"Bad request"         
+  })    }
 };
 
 

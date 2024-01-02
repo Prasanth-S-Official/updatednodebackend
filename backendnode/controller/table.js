@@ -48,7 +48,9 @@ const getAllTables= async (req,res,next)=>{
         res.status(400).json({
             error:true,
             message:"Bad request"         
-        })      }
+        })      
+    
+    }
 }
 
 //Editing the table status
@@ -120,7 +122,8 @@ const bookTable = async (req,res,next)=>{
         res.status(400).json({
             error:true,
             message:"Bad request"         
-        })      }
+        })    
+      }
 }
 
 module.exports = {
