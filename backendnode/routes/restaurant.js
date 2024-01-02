@@ -18,7 +18,7 @@ restaurantRouter.get('/getAllMenu',menuController.getAllMenuItems);
 //Adding a table
 restaurantRouter.post('/addTable',tableController.addTable);
 //Getting table status
-restaurantRouter.get('/table',tableController.getTableStatus);
+restaurantRouter.get('/table',tableController.getAllTables);
 //editing the table status
 restaurantRouter.put('/table/editStatus',tableController.editTableStatus);
 

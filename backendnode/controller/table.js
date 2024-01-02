@@ -34,7 +34,7 @@ const addTable= async (req,res,next)=>{
 }
 
 //Getting the table status
-const getTableStatus= async (req,res,next)=>{
+const getAllTables= async (req,res,next)=>{
     try{
        const tables= await tableModel.find().lean();
        res.json({
@@ -123,7 +123,7 @@ const bookTable = async (req,res,next)=>{
 
 module.exports = {
     addTable,
-    getTableStatus,
+    getAllTables,
     editTableStatus,
     bookTable
 }
