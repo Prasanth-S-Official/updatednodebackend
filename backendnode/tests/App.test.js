@@ -3,6 +3,7 @@ const { addMenuItem, editMenuItem, getAllMenuItems } = require("../controller/me
 const { createOrder,reviewOrder } = require("../controller/order");
 const menu = require("../models/menu");
 const order = require("../models/order");
+const menuModel = require("../models/menu");
 
 
 describe("Week8 day5",()=>{
@@ -275,7 +276,6 @@ describe('Week9 day1', () => {
         data: sampleOrder,
       });
     });
-
     test('week9_day1_should_return_order_not_found_with_a_200_status_code', async () => {
       // Mock Express request and response objects
       const req = {
@@ -303,10 +303,12 @@ describe('Week9 day1', () => {
         message: 'order not found',
       });
     });
-
-  
   });
 
 
+  test('week9_day1_should_define_the_menu_model_2', async () => {
+      expect(menuModel).toBeDefined();
+  });
+  
 
 });
