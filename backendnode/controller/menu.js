@@ -16,7 +16,8 @@ const addMenuItem= async (req,res,next)=>{
             status,
             price
         }])
-        res.json({
+
+        res.status(200).json({
             error:false,
             message:"menu item has been added successfully",
             data:null
