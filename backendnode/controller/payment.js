@@ -48,7 +48,7 @@ const makePayment = async (req, res, next) => {
     }catch(err){
       res.status(400).json({
         error:true,
-        message:"Bad request",           
+        message:"Bad request"         
     })  
     }
 }

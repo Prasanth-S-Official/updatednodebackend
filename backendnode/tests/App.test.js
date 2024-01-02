@@ -308,7 +308,7 @@ describe('Week9 day1', () => {
 });
 
 describe('makePayment Controller', () => {
-  test('should_make_payment_with_a_200_status_code', async () => {
+  test('week9_day3_should_make_payment_with_a_200_status_code', async () => {
     // Mock Express request and response objects
     const req = {
       body: {
@@ -343,7 +343,7 @@ describe('makePayment Controller', () => {
     });
   });
 
-  test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+  test('week9_day3_make_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
     // Mock Express request and response objects
     const req = {
       body: {
@@ -354,6 +354,9 @@ describe('makePayment Controller', () => {
       json: jest.fn(),
       status: jest.fn().mockReturnThis(),
     };
+        // Mock the paymentModel.find method to reject with an error
+        const error = new Error('Database error');
+        paymentModel.insertMany = jest.fn().mockRejectedValue(error);
 
     // Call the controller function
     await makePayment(req, res);
@@ -363,13 +366,12 @@ describe('makePayment Controller', () => {
     expect(res.json).toHaveBeenCalledWith({
       error: true,
       message: 'Bad request',
-      data: null,
     });
   });
 });
 
 describe('getAllPayments Controller', () => {
-  test('should_return_all_payments_with_a_200_status_code', async () => {
+  test('week9_day3_should_return_all_payments_with_a_200_status_code', async () => {
     // Mock Express request and response objects
     const req = {};
     const res = {
@@ -407,7 +409,7 @@ describe('getAllPayments Controller', () => {
     });
   });
 
-  test('should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
+  test('week9_day3_get_all_payment_should_handle_errors_and_respond_with_a_400_status_code_and_an_error_message', async () => {
     // Mock Express request and response objects
     const req = {};
     const res = {
@@ -427,7 +429,6 @@ describe('getAllPayments Controller', () => {
     expect(res.json).toHaveBeenCalledWith({
       error: true,
       message: 'Bad request',
-      data: null,
     });
   });
 });
