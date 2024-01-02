@@ -206,9 +206,9 @@ describe("Week8 day5",()=>{
 })
   
 
-describe('Order Controller', () => {
+describe('Week9 day1', () => {
   describe('createOrder', () => {
-    test('should_place_order_with_a_200_status_code', async () => {
+    test('week9_day1_should_place_order_with_a_200_status_code', async () => {
       // Mock Express request and response objects
       const req = {
         body: {
@@ -235,111 +235,78 @@ describe('Order Controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       
     });
+  });
 
-    test('should_handle_errors_and_respond_with_a_500_status_code', async () => {
+  describe('reviewOrder', () => {
+    test('week9_day1_should_return_order_with_a_200_status_code', async () => {
       // Mock Express request and response objects
       const req = {
-        body: {
-          // Missing required fields
+        params: {
+          customerId: 'customerId',
         },
       };
       const res = {
         json: jest.fn(),
         status: jest.fn().mockReturnThis(),
+
       };
 
+      // Mock the order.findOne method to resolve with a sample order
+      const sampleOrder = {
+        _id: 'orderId',
+        menuItems: ['item1', 'item2'],
+        customerId: 'customerId',
+        description: 'Order description',
+        totalPrice: 50.99,
+        tableNo: 'Table 1',
+        status: 'Pending',
+      };
+      order.findOne = jest.fn().mockResolvedValue(sampleOrder);
+
       // Call the controller function
-      await  createOrder(req, res);
+      await reviewOrder(req, res);
 
       // Assertions
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(200);
+
       expect(res.json).toHaveBeenCalledWith({
-        error: true,
-        message: 'Bad request',
+        error: false,
+        message: 'order found successfully',
+        data: sampleOrder,
       });
     });
+
+    test('week9_day1_should_return_order_not_found_with_a_200_status_code', async () => {
+      // Mock Express request and response objects
+      const req = {
+        params: {
+          customerId: 'nonExistentCustomerId',
+        },
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+
+      };
+
+      // Mock the order.findOne method to resolve with null (order not found)
+      order.findOne = jest.fn().mockResolvedValue(null);
+
+      // Call the controller function
+      await reviewOrder(req, res);
+
+      // Assertions
+      expect(res.status).toHaveBeenCalledWith(404);
+
+      expect(res.json).toHaveBeenCalledWith({
+        error: false,
+        message: 'order not found',
+      });
+    });
+
+  
   });
 
-  // describe('reviewOrder', () => {
-  //   test('should_return_order_with_a_200_status_code', async () => {
-  //     // Mock Express request and response objects
-  //     const req = {
-  //       params: {
-  //         customerId: 'customerId',
-  //       },
-  //     };
-  //     const res = {
-  //       json: jest.fn(),
-  //     };
 
-  //     // Mock the order.findOne method to resolve with a sample order
-  //     const sampleOrder = {
-  //       _id: 'orderId',
-  //       menuItems: ['item1', 'item2'],
-  //       customerId: 'customerId',
-  //       description: 'Order description',
-  //       totalPrice: 50.99,
-  //       tableNo: 'Table 1',
-  //       status: 'Pending',
-  //     };
-  //     order.findOne = jest.fn().mockResolvedValue(sampleOrder);
 
-  //     // Call the controller function
-  //     await reviewOrder(req, res);
-
-  //     // Assertions
-  //     expect(res.json).toHaveBeenCalledWith({
-  //       error: false,
-  //       message: 'order found successfully',
-  //       data: sampleOrder,
-  //     });
-  //   });
-
-  //   test('should_return_order_not_found_with_a_200_status_code', async () => {
-  //     // Mock Express request and response objects
-  //     const req = {
-  //       params: {
-  //         customerId: 'nonExistentCustomerId',
-  //       },
-  //     };
-  //     const res = {
-  //       json: jest.fn(),
-  //     };
-
-  //     // Mock the order.findOne method to resolve with null (order not found)
-  //     order.findOne = jest.fn().mockResolvedValue(null);
-
-  //     // Call the controller function
-  //     await order.reviewOrder(req, res);
-
-  //     // Assertions
-  //     expect(order.findOne).toHaveBeenCalledWith({ customerId: 'nonExistentCustomerId' });
-  //     expect(res.json).toHaveBeenCalledWith({
-  //       error: false,
-  //       message: 'order not found',
-  //     });
-  //   });
-
-  //   test('should_handle_errors_and_respond_with_a_500_status_code', async () => {
-  //     // Mock Express request and response objects
-  //     const req = {
-  //       params: {
-  //         customerId: 'customerId',
-  //       },
-  //     };
-  //     const res = {
-  //       json: jest.fn(),
-  //     };
-
-  //     // Mock the order.findOne method to reject with an error
-  //     const error = new Error('Database error');
-  //     order.findOne = jest.fn().mockRejectedValue(error);
-
-  //     // Call the controller function
-  //     await  reviewOrder(req, res);
-
-  //     // Assertions
-      
-  //   });
-  // });
 });

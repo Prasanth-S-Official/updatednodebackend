@@ -14,7 +14,7 @@ const createOrder = async (req, res, next) => {
         status
       },
     ]);
-    res..status(200).json({
+    res.status(200).json({
       error: false,
       message: "order has been placed successfully",
       data: null,
@@ -32,7 +32,7 @@ const reviewOrder= async (req,res,next)=>{
 
         const order= await orderModel.findOne({customerId});
         if(order){
-            res.json(
+            res.status(200).json(
                 {
                     error:false,
                     message:"order found successfully",
@@ -41,9 +41,9 @@ const reviewOrder= async (req,res,next)=>{
             )
         }
         else{
-            res.json({
+            res.status(404).json({
                 error:false,
-                message:"order not found ",
+                message:"order not found",
             })
         }
         
